@@ -213,17 +213,32 @@ exports.forgotPassword = async (
       req.body.email
     );
 
+    console.log(
+      "FORGOT PASSWORD REQUEST:",
+      normalizedEmail
+    );
+
     const user = await User.findOne({
       email: normalizedEmail,
     });
 
     if (!user) {
+      console.log(
+        "USER NOT FOUND:",
+        normalizedEmail
+      );
+
       return res.status(200).json({
         success: true,
         message:
           "If the account exists, a password reset email has been sent",
       });
     }
+
+    console.log(
+      "USER FOUND:",
+      user.email
+    );
 
     const resetToken =
       crypto.randomBytes(20).toString(
@@ -238,6 +253,11 @@ exports.forgotPassword = async (
 
     await user.save();
 
+    console.log(
+      "RESET TOKEN SAVED:",
+      resetToken
+    );
+
     const clientUrl = (
       process.env.CLIENT_URL ||
       process.env.FRONTEND_URL ||
@@ -247,8 +267,17 @@ exports.forgotPassword = async (
     const resetUrl =
       `${clientUrl}/reset-password/${resetToken}`;
 
+    console.log(
+      "RESET URL:",
+      resetUrl
+    );
+
     const message =
       `Password Reset Link:\n\n${resetUrl}`;
+
+    console.log(
+      "ABOUT TO CALL SENDEMAIL"
+    );
 
     await sendEmail(
       user.email,
@@ -256,12 +285,24 @@ exports.forgotPassword = async (
       message
     );
 
+    console.log(
+      "SENDEMAIL COMPLETED"
+    );
+
     res.status(200).json({
       success: true,
       message:
         "Password reset email sent",
     });
+
   } catch (error) {
+
+    console.log(
+      "FORGOT PASSWORD ERROR:"
+    );
+
+    console.log(error);
+
     res.status(500).json({
       success: false,
       message: error.message,
