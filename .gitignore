@@ -1,0 +1,37 @@
+# Dependencies
+node_modules/
+**/node_modules/
+
+# Environment Files
+.env
+.env.*
+!.env.example
+
+# Build Files
+dist/
+build/
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+
+# OS Files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Docker
+docker-data/
+# Vite
+.vite/
+
+# Coverage
+coverage/
+
+# Docker
+*.tar

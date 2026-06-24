@@ -1,0 +1,296 @@
+.starfield {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 82% 18%, rgba(125, 211, 252, 0.08), transparent 14%),
+    radial-gradient(circle at 76% 24%, rgba(99, 102, 241, 0.12), transparent 22%),
+    radial-gradient(circle at 12% 84%, rgba(34, 211, 238, 0.1), transparent 16%),
+    linear-gradient(135deg, #030714 0%, #09132c 42%, #121b3d 74%, #171a46 100%);
+  transform: translateZ(0);
+}
+
+.starfield__mesh,
+.starfield__beam,
+.starfield__comet,
+.starfield__vignette,
+.starfield__layer {
+  position: absolute;
+  inset: 0;
+}
+
+.starfield__mesh {
+  filter: blur(72px);
+  opacity: 0.34;
+}
+
+.starfield__mesh--one {
+  background:
+    radial-gradient(circle at 78% 18%, rgba(186, 230, 253, 0.14), transparent 16%),
+    radial-gradient(circle at 68% 28%, rgba(96, 165, 250, 0.12), transparent 22%),
+    radial-gradient(circle at 22% 74%, rgba(56, 189, 248, 0.08), transparent 18%);
+}
+
+.starfield__mesh--two {
+  background:
+    radial-gradient(circle at 86% 8%, rgba(125, 211, 252, 0.18), transparent 14%),
+    radial-gradient(circle at 12% 88%, rgba(34, 211, 238, 0.14), transparent 12%),
+    radial-gradient(circle at 36% 58%, rgba(59, 130, 246, 0.08), transparent 20%);
+}
+
+.starfield__beam {
+  inset: auto;
+  width: 96vw;
+  height: 170px;
+  left: -4vw;
+  bottom: 4vh;
+  transform-origin: left center;
+  transform: rotate(-33deg) translate3d(0, 0, 0);
+  will-change: transform, opacity;
+}
+
+.starfield__beam--outer {
+  background: linear-gradient(
+    90deg,
+    rgba(96, 165, 250, 0.56) 0%,
+    rgba(125, 211, 252, 0.2) 14%,
+    rgba(96, 165, 250, 0.12) 34%,
+    rgba(59, 130, 246, 0.08) 58%,
+    rgba(59, 130, 246, 0) 100%
+  );
+  clip-path: polygon(0 50%, 100% 0, 100% 100%);
+  filter: blur(22px);
+  opacity: 0.24;
+}
+
+.starfield__beam--inner {
+  height: 110px;
+  left: -1vw;
+  bottom: 6vh;
+  background: linear-gradient(
+    90deg,
+    rgba(224, 242, 254, 0.78) 0%,
+    rgba(125, 211, 252, 0.42) 12%,
+    rgba(96, 165, 250, 0.16) 28%,
+    rgba(56, 189, 248, 0) 100%
+  );
+  clip-path: polygon(0 50%, 100% 8%, 100% 92%);
+  filter: blur(12px);
+  opacity: 0.36;
+}
+
+.starfield__comet {
+  left: -6vw;
+  right: auto;
+  top: auto;
+  bottom: -10vh;
+  width: 42vw;
+  height: 42vw;
+  min-width: 320px;
+  min-height: 320px;
+  background:
+    radial-gradient(circle at 26% 46%, rgba(255, 255, 255, 0.82) 0%, rgba(224, 242, 254, 0.72) 4%, rgba(125, 211, 252, 0.44) 10%, rgba(59, 130, 246, 0.18) 18%, transparent 44%),
+    radial-gradient(circle at 30% 48%, rgba(56, 189, 248, 0.18), transparent 22%);
+  filter: blur(12px);
+  opacity: 0.48;
+  transform: translate3d(0, 0, 0);
+}
+
+.starfield__vignette {
+  background:
+    radial-gradient(circle at center, transparent 48%, rgba(2, 6, 23, 0.16) 100%),
+    linear-gradient(180deg, rgba(2, 6, 23, 0.02), rgba(2, 6, 23, 0.14));
+}
+
+.starfield__layer {
+  inset: -26vh -18vw;
+  transform: translate3d(0, 0, 0);
+}
+
+.starfield__layer--stream {
+  filter: saturate(1.1);
+}
+
+.starfield__layer--dust {
+  opacity: 0.72;
+}
+
+.starfield__star {
+  position: absolute;
+  top: var(--origin-y);
+  left: var(--origin-x);
+  width: var(--star-size);
+  height: var(--star-size);
+  opacity: 0;
+  border-radius: 999px;
+  will-change: transform, opacity;
+  transform: translate3d(0, 0, 0) scale(0.82);
+  animation: starfield-drift var(--drift-duration) linear infinite;
+  animation-delay: var(--drift-delay);
+}
+
+.starfield__star::before,
+.starfield__star::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+
+.starfield__star::before {
+  border-radius: inherit;
+  animation: starfield-twinkle var(--twinkle-duration) ease-in-out infinite;
+  animation-delay: var(--twinkle-delay);
+}
+
+.starfield__star--stream::before {
+  background:
+    radial-gradient(
+      circle,
+      rgba(255, 255, 255, 1) 0%,
+      rgba(224, 242, 254, 0.98) 24%,
+      rgba(125, 211, 252, 0.86) 54%,
+      rgba(59, 130, 246, 0.24) 82%,
+      transparent 100%
+    );
+  box-shadow:
+    0 0 calc(var(--star-blur) * 0.6) rgba(224, 242, 254, 0.28),
+    0 0 var(--star-blur) rgba(56, 189, 248, 0.18);
+}
+
+.starfield__star--dust::before {
+  background:
+    radial-gradient(
+      circle,
+      rgba(224, 242, 254, 0.94) 0%,
+      rgba(125, 211, 252, 0.56) 52%,
+      transparent 100%
+    );
+  box-shadow: 0 0 calc(var(--star-blur) * 0.55) rgba(125, 211, 252, 0.1);
+}
+
+.starfield__star::after {
+  opacity: 0;
+}
+
+.starfield__star--trail::after {
+  top: 50%;
+  left: calc(100% - 1px);
+  width: var(--trail-length);
+  height: max(1px, calc(var(--star-size) * 0.56));
+  inset: auto auto auto calc(100% - 1px);
+  border-radius: 999px;
+  background: linear-gradient(
+    270deg,
+    rgba(255, 255, 255, 0),
+    rgba(125, 211, 252, 0.08) 16%,
+    rgba(96, 165, 250, 0.24) 48%,
+    rgba(191, 219, 254, 0.42) 82%,
+    rgba(255, 255, 255, 0.66) 100%
+  );
+  filter: blur(2.8px);
+  transform: translate3d(0, -50%, 0) rotate(18deg);
+  transform-origin: left center;
+  animation: starfield-trail var(--drift-duration) linear infinite;
+  animation-delay: var(--drift-delay);
+}
+
+@keyframes starfield-drift {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 0, 0) scale(0.8);
+  }
+
+  6% {
+    opacity: var(--star-opacity);
+  }
+
+  76% {
+    opacity: var(--star-opacity);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate3d(var(--travel-x), var(--travel-y), 0) scale(1.16);
+  }
+}
+
+@keyframes starfield-twinkle {
+  0%,
+  100% {
+    opacity: 0.46;
+    transform: scale(0.92);
+  }
+
+  36% {
+    opacity: 1;
+    transform: scale(1.06);
+  }
+
+  62% {
+    opacity: 0.72;
+    transform: scale(0.98);
+  }
+
+  82% {
+    opacity: 1;
+    transform: scale(1.14);
+  }
+}
+
+@keyframes starfield-trail {
+  0% {
+    opacity: 0;
+  }
+
+  8% {
+    opacity: 0.32;
+  }
+
+  28% {
+    opacity: 0.66;
+  }
+
+  54% {
+    opacity: 0.82;
+  }
+
+  78% {
+    opacity: 0.36;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
+
+@media (max-width: 900px) {
+  .starfield__mesh {
+    filter: blur(54px);
+  }
+
+  .starfield__beam {
+    width: 118vw;
+    left: -12vw;
+    bottom: 10vh;
+  }
+
+  .starfield__comet {
+    width: 56vw;
+    height: 56vw;
+  }
+
+  .starfield__layer {
+    inset: -22vh -22vw;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .starfield__star,
+  .starfield__star::before,
+  .starfield__star::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
