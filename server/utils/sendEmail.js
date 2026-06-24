@@ -1,8 +1,4 @@
-const { Resend } = require("resend");
-
-const resend = new Resend(
-  process.env.RESEND_API_KEY
-);
+const SibApiV3Sdk = require("sib-api-v3-sdk");
 
 const sendEmail = async (
   email,
@@ -10,56 +6,44 @@ const sendEmail = async (
   message
 ) => {
   try {
-    console.log(
-      "RESEND KEY EXISTS:",
-      !!process.env.RESEND_API_KEY
-    );
+    const client =
+      SibApiV3Sdk.ApiClient.instance;
 
-    console.log(
-      "SENDING EMAIL TO:",
-      email
-    );
+    const apiKey =
+      client.authentications["api-key"];
 
-    const data =
-      await resend.emails.send({
-        from: "onboarding@resend.dev",
-        to: email,
+    apiKey.apiKey =
+      process.env.BREVO_API_KEY;
+
+    const apiInstance =
+      new SibApiV3Sdk.TransactionalEmailsApi();
+
+    const result =
+      await apiInstance.sendTransacEmail({
+        sender: {
+          email:
+            "kartikkarnwal11@gmail.com",
+          name: "EventVault Pro",
+        },
+        to: [
+          {
+            email,
+          },
+        ],
         subject,
-        text: message,
+        textContent: message,
       });
 
     console.log(
-      "EMAIL SENT SUCCESSFULLY"
+      "BREVO EMAIL SENT"
     );
-
-    console.log(
-      "RESEND RESPONSE:"
-    );
-
-    console.log(
-      JSON.stringify(
-        data,
-        null,
-        2
-      )
-    );
-
-    return data;
+    console.log(result);
 
   } catch (error) {
-
     console.log(
-      "EMAIL SEND ERROR"
+      "BREVO EMAIL ERROR"
     );
-
-    console.log(
-      JSON.stringify(
-        error,
-        null,
-        2
-      )
-    );
-
+    console.log(error);
     throw error;
   }
 };
